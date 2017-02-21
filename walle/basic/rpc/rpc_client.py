@@ -3,6 +3,7 @@ import sys
 import os
 import traceback
 from walle.basic.serialization.serialize_by_pickle import PickleForSsh
+import importlib
 
 
 class RpcClient:
@@ -24,10 +25,18 @@ class RpcClient:
 
     @staticmethod
     def router_to_method(module_name, clazz_name, method_name):
-        # try:
-        module_name = ""
+        try:
+            module = importlib.import_module(module_name)
+        except ImportError as e:
+            raise AttributeError("import module:{0} failed, reason: {1}".format(module_name, e))
 
-    pass
+        if not hasattr(module, clazz_name):
+            raise AttributeError("Module {0} doesn't have this class: {1}".format(module_name, clazz_name))
+        clazz = getattr(module, clazz_name)
+
+        if not hasattr(clazz, method_name):
+            raise AttributeError("Class {0} doesn't have this method: {1}".format(clazz_name, method_name))
+        return getattr(clazz, method_name)
 
     @staticmethod
     def reformat_traceback_info():

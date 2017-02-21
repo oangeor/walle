@@ -18,8 +18,10 @@ class SshRpcDestination:
                  env=None
                  ):
         self.method_args = method_args or dict()
-        method_kwargs = method_kwargs or list()
-
+        self.method_kwargs = method_kwargs or list()
+        self.module_name = module_name
+        self.app_name =app_name
+        self.vm_name = vm_name
         self.service_name = service_name
         self.method_name = method_name
 
