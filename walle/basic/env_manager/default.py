@@ -10,6 +10,8 @@ class EnvType(Enum):
 class DefaultEnv():
     env_type = EnvType.localhost
     hostname = os.popen("hostname").read()[:-1]
+    rpc_timeout = 60
+
     def is_in_prod(self):
         return self.env_type == EnvType.prod
 
