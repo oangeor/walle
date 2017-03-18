@@ -66,7 +66,6 @@ class MyAsyncSsh(metaclass=Singleton):
                 logging.error("SSH2 Reconnect to{} failed:{}".format(host, str(e)))
                 return host, e
         except Exception as e:
-            raise e
             logging.error("SSH3 Connect to {} failed:{}".format(host, str(e)))
             return host, e
 
