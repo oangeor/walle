@@ -3,8 +3,11 @@ import logging
 from walle.basic.env_manager import env_mng
 from walle.basic.rpc.ssh_rpc_destination import RemoteEnv, SshRpcDestination
 import traceback
-# TODO# if env_mng.is_in_local():
-from walle.basic.rpc.local_rpc import LocalRpc as SshRpc
+
+if env_mng.is_in_local():
+    from walle.basic.rpc.local_rpc import LocalRpc as SshRpc
+else:
+    from walle.basic.rpc.async_pssh import AsshRpc as SshRpc
 
 
 class RpcEntry:
@@ -42,5 +45,6 @@ class RpcEntry:
 
         des = SshRpcDestination.init_by_call(call=call, call_kwargs=call_kwargs, env=env)
         return self._do_rpc(des=des, hosts=vms, rpc_info=des.gen_rpc_info())
+
 
 rpc = RpcEntry()

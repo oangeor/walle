@@ -10,7 +10,7 @@ def get_env_cls():
     return EnvCls
 
 
-env_mng = get_env_cls()
+env_mng = get_env_cls()()
 
 if __name__ == "__main__":
     print("env type: ", env_mng.env_type)

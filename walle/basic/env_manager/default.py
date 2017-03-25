@@ -12,6 +12,9 @@ class DefaultEnv():
     hostname = os.popen("hostname").read()[:-1]
     rpc_timeout = 60
 
+    renice = True
+    python3_path = "python3"
+
     def is_in_prod(self):
         return self.env_type == EnvType.prod
 

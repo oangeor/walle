@@ -14,8 +14,8 @@ class AsshRpc:
     def __init__(self):
         self.client = MyAsyncSsh(key_files=('~/.ssh/id_rsa',))
 
-    def call_vms_by_des(self, des, host, rpc_info):
-        return self
+    def call_vms_by_des(self, des, hosts, rpc_info):
+        return self.call_vms(hosts, rpc_info, des)
 
     def call_vms(self, hosts, rpc_info, cmd=None, des=None):
         # try:
@@ -63,7 +63,7 @@ class AsshRpc:
 
         # result contains at lease one line:
         result_single_line = return_line_list[-1]
-        
+
         # Unpickling
         pickle_result = PickleForSsh.loads_from_str(result_single_line)
         if pickle_result:
