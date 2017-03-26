@@ -1,8 +1,22 @@
-from walle.basic.env_manager import env_mng
+import sys
+import os
 import logging
 import traceback
-import sys
 import argparse
+
+try:
+    root_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.path.pardir))
+    root_path = root_path.split("/walle/walle")[0]
+    root_path = os.path.join(root_path, 'walle')
+
+    sys.path.insert(0, root_path)
+    # sys.path.insert(0, external_packages_path)
+except BaseException:
+    print(traceback.format_exc())
+    print("Load dependency failed")
+    raise
+
+from walle.basic.env_manager import env_mng
 
 
 class MainEntry:
@@ -38,7 +52,6 @@ class MainEntry:
 
             # Todo
             # self.check_user
-
             func_conf['func'](*args)
         except Exception as e:
             logging.error(e)
@@ -58,7 +71,6 @@ def main():
     configs = main_entry.parse_config(sys.argv[1:])
     # TODO: config Env
     # TODO: debug module
-
     main_entry.do(configs.mode, *configs.pargs)
 
 

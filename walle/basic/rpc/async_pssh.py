@@ -1,4 +1,3 @@
-
 import time
 import logging
 from io import StringIO
@@ -15,11 +14,14 @@ class AsshRpc:
         self.client = MyAsyncSsh(key_files=('~/.ssh/id_rsa',))
 
     def call_vms_by_des(self, des, hosts, rpc_info):
-        return self.call_vms(hosts, rpc_info, des)
+        return self.call_vms(hosts, rpc_info, des=des)
 
     def call_vms(self, hosts, rpc_info, cmd=None, des=None):
-        # try:
-        #     cmd = cmd
+        try:
+            cmd = cmd or des.gen_shell_cmd()
+        except AttributeError:
+            pass
+
         if not cmd or not hosts or not isinstance(hosts, list):
             raise ValueError("Ssh args cannot be empty.")
 
@@ -32,15 +34,18 @@ class AsshRpc:
         )
 
         logging.debug(results)
-
         if not results:
             logging.warning("No ssh results returned!")
             return {host: '' for host in hosts}
 
         return_map = {}
         for host, result in results.items():
-            # result_state, rpc_result = self.read
-            pass
+            result_state, rpc_result = self.read_result_by_host(cmd, host, result)
+            if rpc_result:
+                return_map[host] = rpc_result
+            elif result_state.error_code in [ErrorCode.E_RPC_SSH_CONNECT.name, ErrorCode.E_RPC_NO_CONTENT.name]:
+                return_map[host] = result_state
+        return return_map
 
     @staticmethod
     def read_result_by_host(cmd, host, result):

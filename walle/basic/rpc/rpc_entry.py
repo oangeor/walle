@@ -24,7 +24,7 @@ class RpcEntry:
 
         assert isinstance(call_kwargs, dict)
         assert callable(call_method)
-        return self.call_vm
+        return self.call_vm(call_method, call_kwargs, vm_name, env)
 
     def call_vm(self, call, params=None, vm_name='', env=None):
         params = params or dict()
@@ -42,7 +42,6 @@ class RpcEntry:
     def call_vms_by_list(self, call, call_kwargs, vms, env=None):
         assert callable(call)
         assert isinstance(call_kwargs, dict)
-
         des = SshRpcDestination.init_by_call(call=call, call_kwargs=call_kwargs, env=env)
         return self._do_rpc(des=des, hosts=vms, rpc_info=des.gen_rpc_info())
 

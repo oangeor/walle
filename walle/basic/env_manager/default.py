@@ -19,4 +19,5 @@ class DefaultEnv():
         return self.env_type == EnvType.prod
 
     def is_in_local(self):
-        return self.env_type == EnvType.localhost
+        return False
+        # return self.env_type == EnvType.localhost

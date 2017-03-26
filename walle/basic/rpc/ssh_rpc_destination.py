@@ -6,19 +6,17 @@ from walle.basic.serialization.serialize_by_pickle import PickleForSsh
 
 
 class RemoteEnv:
-    def __init__(self, grep_time='', shadow=False, min_rt_threshold=10, job_id=0):
-        self.grep_time = grep_time
-        self.shadow = shadow
-        self.min_rt_threshold = min_rt_threshold
-        self.job_id = job_id
+    def __init__(self, test_param="", ):
+        # TODO: 通过参数控制远程执行环境
+        self.test_param = test_param
 
     def __str__(self):
         return "RemoteEnv:" + str(self.__dict__)
 
 
 class SshRpcDestination:
-    walle_py = 'main_py/src/-m agent'
-    root_entry = '/walle'
+    walle_py = 'walle/basic/main_py/main.py -m agent'
+    root_entry = 'walle/basic'
 
     def __init__(self, app_name="", vm_name="", service_name="", method_name="", module_name="",
                  method_args=None,
@@ -36,9 +34,8 @@ class SshRpcDestination:
         # self.main_py_pwd = rpc_lite_entry.__file__
         now_pwd = os.path.realpath(__file__)
         py_code_pwd = now_pwd.split(self.root_entry)[0]
-        print(now_pwd)
-        print(py_code_pwd)
         self.main_py_pwd = py_code_pwd + self.walle_py
+        self.env = env or RemoteEnv()
 
     @classmethod
     def init_by_call(cls, call, call_args=None, call_kwargs=None, vm_name='', env=None):
@@ -60,7 +57,7 @@ class SshRpcDestination:
         if not all((self.module_name, self.service_name, self.method_name)):
             raise ValueError("Missing Key Parameter")
 
-        nice = "nice -n 10" if env_mng.renice else ""
+        nice = "nice -n 10 " if env_mng.renice else ""
         python3 = nice + env_mng.python3_path
 
         py_path = self.main_py_pwd

@@ -8,7 +8,7 @@ import traceback
 
 
 class MyAsyncSsh(metaclass=Singleton):
-    def __init__(self, key_files=('~/.ssh/id_rsa',), username='log'):
+    def __init__(self, key_files=('~/.ssh/id_rsa',), username='root'):
         self.key_files = key_files
         self.keys = None
         self.conn_cache = dict()
